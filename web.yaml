@@ -14,4 +14,4 @@
     - name: remove current data
       ansible.builtin.file:
         state: absent
-        path: /usr/share/nginx/html/*
+        path: /usr/share/nginx/html/index.html
