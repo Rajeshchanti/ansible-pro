@@ -2,15 +2,9 @@
   hosts: localhost
   become: yes
   tasks:
-    #- name: Installing nginx
-     # dnf: name=nginx state=latest
-    #- name: Start nginx
-     # service:
-      # name: nginx
-       #state: started
     - name: stop nginx
       service:
           name: nginx
           state: stopped
     - name: uninstall nginx
-      apt: name=nginx state=absent
+      dnf: name=nginx state=absent
