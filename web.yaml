@@ -2,9 +2,7 @@
   hosts: web
   become: yes
   tasks:
-    - name: stop nginx
-      service:
-          name: nginx
-          state: stopped
-    - name: uninstall nginx
-      dnf: name=nginx state=absent
+    - name: Installing Nginx
+      ansible.duiltin.dnf:
+        name: nginx
+        state: present
