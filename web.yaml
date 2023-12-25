@@ -15,3 +15,12 @@
       ansible.builtin.file:
         state: absent
         path: /usr/share/nginx/html/index.html
+    - name: Download web application
+      ansible.builtin.get_url:
+        src: https://roboshop-builds.s3.amazonaws.com/web.zip
+        dest: /tmp/web.zip
+    - name: Extracting web application
+      ansible.builtin.unarchive:
+        src: /tmp/web.zip
+        dest: /usr/share/nginx/html
+        remote_src: yes
