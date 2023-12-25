@@ -1,5 +1,5 @@
 - name: setup nginx server
-  hosts: localhost
+  hosts: web
   become: yes
   tasks:
     - name: stop nginx
