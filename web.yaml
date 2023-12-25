@@ -17,7 +17,7 @@
         path: /usr/share/nginx/html/index.html
     - name: Download web application
       ansible.builtin.get_url:
-        src: https://roboshop-builds.s3.amazonaws.com/web.zip
+        url: https://roboshop-builds.s3.amazonaws.com/web.zip
         dest: /tmp/web.zip
     - name: Extracting web application
       ansible.builtin.unarchive:
