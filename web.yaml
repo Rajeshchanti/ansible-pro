@@ -4,7 +4,7 @@
   tasks:
     - name: Installing nginx
       dnf: name=nginx state=latest
-    -name: Start nginx
+    - name: Start nginx
       service:
-        name: nginx
-        state: started
+       name: nginx
+       state: started
