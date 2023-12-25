@@ -12,4 +12,6 @@
         state: started
         enabled: yes
     - name: remove current data
-      ansible.builtin.command: rm -rf /usr/share/nginx/html/*
+      ansible.builtin.file:
+        state: absent
+        path: /usr/share/nginx/html/*
