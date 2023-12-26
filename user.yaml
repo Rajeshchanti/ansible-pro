@@ -49,15 +49,15 @@
         state: present
     - name: get the users count
       ansible.builtin.command:  mongo --host mongodb.techytrees.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
-        register: user_count
+      register: user_count
 
   # - name: print the count
   #   ansible.builtin.debug:
   #     msg: "product count: {{user_count}}"
 
     - name: load user data
-      ansible.builtin.command: mongo --host mongodb.dawtechytrees.online < /app/schema/user.js
-        when: user_count.stdout == "0" # keep double quotes
+      ansible.builtin.shell: mongo --host mongodb.dawtechytrees.online < /app/schema/user.js
+      when: user_count.stdout == "0" # keep double quotes
     - name: Start and Enable user
       ansible.builtin.service:
         name: user
