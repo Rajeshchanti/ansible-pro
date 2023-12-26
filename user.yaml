@@ -1,0 +1,65 @@
+- name: User Setup
+  hosts: user
+  become: yes
+  tasks:
+    - name: Disable and Enable NodeJs:18 version
+      ansible.builtin.command: dnf module disable nodejs -y ; dnf module enable nodejs:18 -y
+    - name: Installing NodeJs
+      ansible.buitlin.package:
+        name: nodejs
+        state: present
+    - name: Creating user
+      ansible.builtin.user:
+        name: roboshop
+    - name: Recursively remove app dir
+      ansible.builtin.file:
+        path: /app
+        state: absent
+    - name: Creating app dir
+      ansible.builtin.file:
+        path: /app
+        state: directory
+    - name: Downloading user application
+      ansible.builtin.get_url:
+        url: https://roboshop-builds.s3.amazonaws.com/user.zip
+        dest: /tmp
+    - name: Unzipping user application
+      ansible.builtin.unarchive:
+        src: /tmp/user.zip
+        dest: /app
+        remote_src: yes
+    - name: Install dependencies
+      ansible.builtin.command: npm install
+        args:
+          chdir: /app
+    - name: Copying user service file
+      ansible.builtin.copy:
+        src: user.service
+        dest: /etc/systemd/system/user.service
+    - name: daemon reload
+      ansible.builtin.systemd_service:
+        daemon_reload: true
+    - name: Copying mongo repo
+      ansible.builtin.copy
+        src: mongo.repo
+        dest: /etc/yum.repos.d/mongo.repo
+    - name: Install mongodb client
+      ansible.builtin.package:
+        name: mongodb-org-shell
+        state: present
+    - name: get the users count
+      ansible.builtin.command:  mongo --host mongodb.techytrees.online --quiet --eval 'db = db.getSiblingDB("users"); db.users.count()'
+        register: user_count
+
+  # - name: print the count
+  #   ansible.builtin.debug:
+  #     msg: "product count: {{user_count}}"
+
+    - name: load user data
+      ansible.builtin.command: mongo --host mongodb.dawtechytrees.online < /app/schema/user.js
+        when: user_count.stdout == "0" # keep double quotes
+    - name: Start and Enable user
+      ansible.builtin.service:
+        name: user
+        state: restarted
+        enabled: yes
