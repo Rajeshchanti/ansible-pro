@@ -30,8 +30,8 @@
         remote_src: yes
     - name: Installing dependencies
       ansible.builtin.command: npm install
-        args:
-          chdir: /app
+      args:
+        chdir: /app
     - name: Copying cart services
       ansible.builtin.copy:
         src: cart.service
